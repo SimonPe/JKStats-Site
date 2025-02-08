@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Stats Joueur</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            border: none;
+            width: 250px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background: #ff6f61;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            transition: background 0.3s;
+            margin-left: 10px;
+        }
+        button:hover {
+            background: #d65a50;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2, h3 {
+            color: #fff;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .player-info img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+    </style>
+    <script>
+        async function fetchPlayerStats() {
+            const pseudo = document.getElementById("pseudo").value;
+            if (!pseudo) {
+                alert("Veuillez entrer un pseudo");
+                return;
+            }
+            
+            try {
+                const response = await fetch("http://api.jkmc.fr/api/players/stats");
+                const data = await response.json();
+                
+                const player = data.find(p => p.player_name.toLowerCase() === pseudo.toLowerCase());
+                
+                if (!player) {
+                    document.getElementById("result").innerHTML = "<h2>Joueur non trouvé</h2>";
+                    return;
+                }
+                
+                const stats = JSON.parse(player.stat);
+                const skinUrl = `https://minotar.net/helm/${player.player_name}/100.png`;
+                
+                let statsHtml = `<div class='player-info'>
+                                    <img src="${skinUrl}" alt="${player.player_name}">
+                                    <h2><i class='fas fa-user'></i> ${player.player_name}</h2>
+                                </div>
+                                <div class='stats-container'>`;
+                
+                for (const [key, value] of Object.entries(stats)) {
+                    const displayKey = key === "PRVStats" ? "Poule Renard Vipère" : key;
+                    statsHtml += `<h3>${displayKey}</h3><ul>`;
+                    for (const [statKey, statValue] of Object.entries(value)) {
+                        const displayStatKey = statKey === "pvp_ranks" ? "Rang" : statKey === "pvp_xp" ? "XP" : statKey === "pvp_kill" ? "Kills" : statKey === "pvp_death" ? "Morts" : statKey === "pvp_kit" ? "Kit" : statKey;
+                        statsHtml += `<li><i class='fas fa-star'></i> <strong>${displayStatKey}:</strong> ${statValue}</li>`;
+                    }
+                    statsHtml += `</ul>`;
+                }
+                
+                statsHtml += `</div>`;
+                document.getElementById("result").innerHTML = statsHtml;
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données", error);
+                document.getElementById("result").innerHTML = "<h2>Erreur lors de la récupération des données</h2>";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1><i class="fas fa-search"></i> Recherche de Stats Joueur</h1>
+    <div class="search-container">
+        <input type="text" id="pseudo" placeholder="Entrez un pseudo">
+        <button onclick="fetchPlayerStats()"><i class="fas fa-search"></i> Rechercher</button>
+    </div>
+    <div id="result"></div>
+</body>
+</html>

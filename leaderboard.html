@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classement PVP & Mini-jeux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center mb-6">Classement PVP & Mini-jeux</h1>
+        
+        <h2 class="text-2xl font-semibold mt-6">Classement PVP</h2>
+        <table class="min-w-full bg-gray-800 rounded-lg overflow-hidden mb-6">
+            <thead>
+                <tr class="bg-gray-700">
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('pvp', 'name')">Pseudo</th>
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('pvp', 'xp')">XP</th>
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('pvp', 'kills')">Kills</th>
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('pvp', 'deaths')">Morts</th>
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('pvp', 'ratio')">Ratio</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-pvp"></tbody>
+        </table>
+        
+        <h2 class="text-2xl font-semibold mt-6">Classement PRV</h2>
+        <table class="min-w-full bg-gray-800 rounded-lg overflow-hidden mb-6">
+            <thead>
+                <tr class="bg-gray-700">
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('prv', 'name')">Pseudo</th>
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('prv', 'captures')">Captures</th>
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('prv', 'wins')">Victoires</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-prv"></tbody>
+        </table>
+        
+        <h2 class="text-2xl font-semibold mt-6">Classement Cache-cache</h2>
+        <table class="min-w-full bg-gray-800 rounded-lg overflow-hidden">
+            <thead>
+                <tr class="bg-gray-700">
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('cachecache', 'name')">Pseudo</th>
+                    <th class="py-2 px-4 cursor-pointer" onclick="sortTable('cachecache', 'hiderCount')">Cache-cache (Hider)</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-cachecache"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let playersPVP = [], playersPRV = [], playersCacheCache = [];
+        
+        async function fetchStats() {
+            try {
+                const response = await fetch('http://api.jkmc.fr/api/players/stats');
+                const data = await response.json();
+                
+                playersPVP = [];
+                playersPRV = [];
+                playersCacheCache = [];
+                
+                data.forEach(player => {
+                    const stats = JSON.parse(player.stat || '{}');
+                    const pvp = stats.Lobby || {};
+                    const prv = stats.PRVStats || {};
+                    const cacheCache = stats.CacheCache || {};
+                    
+                    const xp = parseInt(pvp.pvp_xp) || 0;
+                    const kills = parseInt(pvp.pvp_kill) || 0;
+                    const deaths = parseInt(pvp.pvp_death) || 0;
+                    const ratio = deaths > 0 ? (kills / deaths).toFixed(2) : kills;
+                    
+                    const captures = parseInt(prv.Captures) || 0;
+                    const wins = parseInt(prv.Wins) || 0;
+                    
+                    const hiderCount = parseInt(cacheCache.HiderCount) || 0;
+                    
+                    if (xp > 0 || kills > 0 || deaths > 0) {
+                        playersPVP.push({ name: player.player_name, xp, kills, deaths, ratio });
+                    }
+                    if (captures > 0 || wins > 0) {
+                        playersPRV.push({ name: player.player_name, captures, wins });
+                    }
+                    if (hiderCount > 0) {
+                        playersCacheCache.push({ name: player.player_name, hiderCount });
+                    }
+                });
+                
+                displayTable('pvp', playersPVP);
+                displayTable('prv', playersPRV);
+                displayTable('cachecache', playersCacheCache);
+            } catch (error) {
+                console.error('Erreur de récupération des stats:', error);
+            }
+        }
+        
+        function displayTable(type, data) {
+            const tableBody = document.getElementById(`ranking-${type}`);
+            tableBody.innerHTML = data.map(player => `
+                <tr class="border-b border-gray-700">
+                    ${Object.values(player).map(value => `<td class="py-2 px-4">${value}</td>`).join('')}
+                </tr>
+            `).join('');
+        }
+        
+        function sortTable(type, key) {
+            let dataset = type === 'pvp' ? playersPVP : type === 'prv' ? playersPRV : playersCacheCache;
+            dataset.sort((a, b) => (b[key] - a[key]) || (a.name > b.name ? 1 : -1));
+            displayTable(type, dataset);
+        }
+        
+        fetchStats();
+    </script>
+</body>
+</html>
