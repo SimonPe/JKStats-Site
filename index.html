@@ -23,6 +23,29 @@
             margin-bottom: 20px;
             text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
         }
+        #footer {
+        margin-top: 20px; 
+        font-size: 1.2em;
+        }
+
+        #result h2, #result h3 {
+        font-weight: bold;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
+        }
+
+        #result ul {
+        padding-left: 20px;
+        }
+
+        #result li {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+        list-style: none;
+        }
+
+        #result li i {
+        color: #ffcc00; 
+        }
         .search-container {
             display: flex;
             justify-content: center;
@@ -71,14 +94,28 @@
         #leaderboard:hover {
             transform: scale(1.1);
         }
+        .player-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        }
+
+        .player-header img {
+        border-radius: 10px;
+        width: 100px;
+        height: 100px;
+        }
+
         #result {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            display: inline-block;
-            text-align: left;
-            animation: fadeIn 1s ease-in-out;
+        background: rgba(0, 0, 0, 0.7); 
+        color: white; 
+        padding: 20px;
+        border-radius: 20px;
+        display: inline-block;
+        text-align: left;
+        animation: fadeIn 1s ease-in-out;
+        max-width: 500px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -103,15 +140,17 @@
                 const stats = JSON.parse(player.stat);
                 const skinUrl = `https://minotar.net/helm/${player.player_name}/100.png`;
                 let statsHtml = `<div class='player-info'>
-                                    <img src="${skinUrl}" alt="${player.player_name}" style="border-radius: 10px; width: 100px; height: 100px;">
-                                    <h2><i class='fas fa-user'></i> ${player.player_name}</h2>
-                                </div>
+                    <div class="player-header">
+                        <img src="${skinUrl}" alt="${player.player_name}">
+                        <h2><i class='fas fa-user'></i> ${player.player_name}</h2>
+                    </div>
+                </div>
                                 <div class='stats-container'>`;
                 for (const [key, value] of Object.entries(stats)) {
                     const displayKey = key === "PRVStats" ? "Poule Renard Vipère" : key;
                     statsHtml += `<h3>${displayKey}</h3><ul>`;
                     for (const [statKey, statValue] of Object.entries(value)) {
-                        const displayStatKey = statKey.replace(/_/g, ' ');
+                        const displayStatKey = statKey === "pvp_ranks" ? "Rang" : statKey === "pvp_xp" ? "XP" : statKey === "pvp_kill" ? "Kills" : statKey === "pvp_death" ? "Morts" : statKey === "pvp_kit" ? "Kit" : statKey;
                         statsHtml += `<li><i class='fas fa-star'></i> <strong>${displayStatKey}:</strong> ${statValue}</li>`;
                     }
                     statsHtml += "</ul>";
@@ -123,6 +162,11 @@
                 document.getElementById("result").innerHTML = "<h2>Erreur lors de la récupération des données</h2>";
             }
         }
+        document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("leaderboard").addEventListener("click", () => {
+        window.location.href = "leaderboard.html";
+    });
+});
     </script>
 </head>
 <body>
@@ -133,5 +177,11 @@
         <button onclick="fetchPlayerStats()"><i class="fas fa-search"></i> Rechercher</button>
     </div>
     <div id="result"></div>
+    <div id="footer" class="footer-center">
+        Site créé par Furio360 💖
+    </div>
+    <div id="footer" class="footer-center">
+        Site Non Officiel à JKMC
+    </div>
 </body>
 </html>
