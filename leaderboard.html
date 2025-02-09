@@ -24,14 +24,16 @@
             gap: 20px;
         }
         .leaderboard {
-            width: 30%;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s;
-            padding: 20px;
-        }
+    width: 30%;
+    background: rgba(0, 0, 0, 0.7); 
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s;
+    padding: 20px;
+    color: white; 
+}
+
         .leaderboard:hover {
             transform: scale(1.05);
         }
@@ -148,9 +150,13 @@
                     }
                 });
                 
-                displayTable('pvp', playersPVP);
-                displayTable('prv', playersPRV);
-                displayTable('cachecache', playersCacheCache);
+                playersPVP.sort((a, b) => b.xp - a.xp || a.name.localeCompare(b.name));
+playersPRV.sort((a, b) => b.captures - a.captures || a.name.localeCompare(b.name));
+playersCacheCache.sort((a, b) => b.hiderCount - a.hiderCount || a.name.localeCompare(b.name)); 
+displayTable('pvp', playersPVP);
+displayTable('prv', playersPRV);
+displayTable('cachecache', playersCacheCache);
+
             } catch (error) {
                 console.error('Erreur de récupération des stats:', error);
             }
