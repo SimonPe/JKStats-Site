@@ -50,6 +50,7 @@
 
     <script>
         let playersPVP = [], playersPRV = [], playersCacheCache = [];
+        let lastSortedKey = { pvp: 'xp', prv: 'captures', cachecache: 'hiderCount' };
         
         async function fetchStats() {
             try {
@@ -87,9 +88,9 @@
                     }
                 });
                 
-                displayTable('pvp', playersPVP);
-                displayTable('prv', playersPRV);
-                displayTable('cachecache', playersCacheCache);
+                sortTable('pvp', 'xp');
+                sortTable('prv', 'captures');
+                sortTable('cachecache', 'hiderCount');
             } catch (error) {
                 console.error('Erreur de récupération des stats:', error);
             }
@@ -107,6 +108,7 @@
         function sortTable(type, key) {
             let dataset = type === 'pvp' ? playersPVP : type === 'prv' ? playersPRV : playersCacheCache;
             dataset.sort((a, b) => (b[key] - a[key]) || (a.name > b.name ? 1 : -1));
+            lastSortedKey[type] = key;
             displayTable(type, dataset);
         }
         

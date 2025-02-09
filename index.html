@@ -7,15 +7,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(to right, #ffcc00, #ff66b2);
             text-align: center;
             padding: 50px;
             color: white;
+            animation: backgroundPulse 5s infinite alternate;
+        }
+        @keyframes backgroundPulse {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
         }
         h1 {
-            font-size: 2.5em;
+            font-size: 3em;
             margin-bottom: 20px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
         }
         .search-container {
             display: flex;
@@ -24,31 +30,52 @@
             margin-bottom: 20px;
         }
         input {
-            padding: 10px;
-            font-size: 1.2em;
-            border-radius: 5px;
-            border: none;
-            width: 250px;
+            padding: 12px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            border: 2px solid white;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        input:focus {
+            transform: scale(1.1);
         }
         button {
-            padding: 10px 20px;
-            font-size: 1.2em;
-            background: #ff6f61;
+            padding: 12px 25px;
+            font-size: 1.5em;
+            background: #ff4081;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             color: white;
-            transition: background 0.3s;
+            transition: transform 0.3s, background 0.3s;
             margin-left: 10px;
         }
         button:hover {
-            background: #d65a50;
+            transform: scale(1.1);
+            background: #ff1053;
+        }
+        #leaderboard {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffcc00;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        #leaderboard:hover {
+            transform: scale(1.1);
         }
         #result {
             margin-top: 30px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
             display: inline-block;
             text-align: left;
             animation: fadeIn 1s ease-in-out;
@@ -56,29 +83,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        h2, h3 {
-            color: #fff;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            font-size: 1.2em;
-            margin: 5px 0;
-        }
-        .player-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .player-info img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            margin-right: 20px;
         }
     </style>
     <script>
@@ -88,38 +92,31 @@
                 alert("Veuillez entrer un pseudo");
                 return;
             }
-            
             try {
                 const response = await fetch("http://api.jkmc.fr/api/players/stats");
                 const data = await response.json();
-                
                 const player = data.find(p => p.player_name.toLowerCase() === pseudo.toLowerCase());
-                
                 if (!player) {
                     document.getElementById("result").innerHTML = "<h2>Joueur non trouvé</h2>";
                     return;
                 }
-                
                 const stats = JSON.parse(player.stat);
                 const skinUrl = `https://minotar.net/helm/${player.player_name}/100.png`;
-                
                 let statsHtml = `<div class='player-info'>
-                                    <img src="${skinUrl}" alt="${player.player_name}">
+                                    <img src="${skinUrl}" alt="${player.player_name}" style="border-radius: 10px; width: 100px; height: 100px;">
                                     <h2><i class='fas fa-user'></i> ${player.player_name}</h2>
                                 </div>
                                 <div class='stats-container'>`;
-                
                 for (const [key, value] of Object.entries(stats)) {
                     const displayKey = key === "PRVStats" ? "Poule Renard Vipère" : key;
                     statsHtml += `<h3>${displayKey}</h3><ul>`;
                     for (const [statKey, statValue] of Object.entries(value)) {
-                        const displayStatKey = statKey === "pvp_ranks" ? "Rang" : statKey === "pvp_xp" ? "XP" : statKey === "pvp_kill" ? "Kills" : statKey === "pvp_death" ? "Morts" : statKey === "pvp_kit" ? "Kit" : statKey;
+                        const displayStatKey = statKey.replace(/_/g, ' ');
                         statsHtml += `<li><i class='fas fa-star'></i> <strong>${displayStatKey}:</strong> ${statValue}</li>`;
                     }
-                    statsHtml += `</ul>`;
+                    statsHtml += "</ul>";
                 }
-                
-                statsHtml += `</div>`;
+                statsHtml += "</div>";
                 document.getElementById("result").innerHTML = statsHtml;
             } catch (error) {
                 console.error("Erreur lors de la récupération des données", error);
@@ -129,7 +126,8 @@
     </script>
 </head>
 <body>
-    <h1><i class="fas fa-search"></i> Recherche de Stats Joueur</h1>
+    <h1><i class="fas fa-search"></i> Jkmc - Statistiques</h1>
+    <button id="leaderboard">🏆 Classement</button>
     <div class="search-container">
         <input type="text" id="pseudo" placeholder="Entrez un pseudo">
         <button onclick="fetchPlayerStats()"><i class="fas fa-search"></i> Rechercher</button>
