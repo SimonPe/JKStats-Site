@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patch Notes</title>
+    <link rel="icon" type="image/png" href="logo.png"> 
+    <style>
+        body {
+            font-family: 'Verdana';
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            text-align: center;
+            padding: 50px;
+            color: white;
+            animation: backgroundPulse 5s infinite alternate;
+        }
+        @keyframes backgroundPulse {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        #footer {
+            margin-top: 20px; 
+            font-size: 1.2em;
+        }
+        #result h2, #result h3 {
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
+        }
+        #result ul {
+            padding-left: 20px;
+        }
+        .patch-note {
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 20px;
+        border-radius: 20px;
+        text-align: left;
+        animation: fadeIn 1s ease-in-out;
+        max-width: 500px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        display: block;
+        margin: 20px auto; 
+    }
+        #result li {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            list-style: none;
+        }
+        #result li i {
+            color: #ffcc00; 
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 12px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            border: 2px solid white;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        input:focus {
+            transform: scale(1.1);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1.5em;
+            background: #ff4081;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.3s, background 0.3s;
+            margin-left: 10px;
+        }
+        button:hover {
+            transform: scale(1.1);
+            background: #ff1053;
+        }
+        #leaderboard, #main {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: #ff4081;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        #main {
+            top: 20px;
+            background: #ff4081;
+        }
+        #leaderboard:hover, #updates:hover {
+            transform: scale(1.1);
+        }
+        #result {
+            background: rgba(0, 0, 0, 0.7); 
+            color: white; 
+            padding: 20px;
+            border-radius: 20px;
+            display: inline-block;
+            text-align: left;
+            animation: fadeIn 1s ease-in-out;
+            max-width: 500px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <h1>JKStats - PatchNotes</h1>
+    </div>
+    <button id="leaderboard">🏆 Classement</button>
+    <button id="main">🏠 Accueil</button>
+    <div class="patch-note">
+        <h3>Modifications</h3>
+        <ul>
+            <li><i>📐</i> Refonte du Classement avec un aspect plus Esthétique</li>
+        </ul>
+        <h3>Corrections de bugs</h3>
+        <ul>
+            <li><i>🐞</i> JkStats est désormais entièrement relié à L'API</li>
+        </ul>
+    </div>
+    <div id="footer" class="footer-center">
+        <p>Site créé par Furio360 💖 | Site Non Officiel à JKMC</p>
+    </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("leaderboard").addEventListener("click", () => {
+    window.location.href = "leaderboard.html";
+    
+});
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("main").addEventListener("click", () => {
+    window.location.href = "index.html";
+    
+});
+});
+
+</script>
+</body>
+</html>
