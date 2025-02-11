@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recherche de Stats Joueur</title>
+    <title>JKMC - Stats</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png"> 
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Verdana';
             background: linear-gradient(to right, #ffcc00, #ff66b2);
             text-align: center;
             padding: 50px;
@@ -94,6 +95,21 @@
         #leaderboard:hover {
             transform: scale(1.1);
         }
+        #updates {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: #008680;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        #updates:hover {
+            transform: scale(1.1);
+        }
         .player-header {
         display: flex;
         align-items: center;
@@ -165,13 +181,23 @@
         document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("leaderboard").addEventListener("click", () => {
         window.location.href = "leaderboard.html";
+        
     });
 });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("updates").addEventListener("click", () => {
+        window.location.href = "updates.html";
+        
+    });
+});
+
     </script>
 </head>
 <body>
     <h1><i class="fas fa-search"></i> Jkmc - Statistiques</h1>
     <button id="leaderboard">🏆 Classement</button>
+    <button id="updates">🥏 Updates</button>
     <div class="search-container">
         <input type="text" id="pseudo" placeholder="Entrez un pseudo">
         <button onclick="fetchPlayerStats()"><i class="fas fa-search"></i> Rechercher</button>

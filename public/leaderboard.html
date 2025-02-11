@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classement PVP & Mini-jeux</title>
+    <title>JKMC - Classement</title>
+    <link rel="icon" type="image/png" href="logo.png"> 
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Verdana';
             background: linear-gradient(to right, #ffcc00, #ff66b2);
             text-align: center;
             padding: 50px;
@@ -16,6 +17,36 @@
             font-size: 3em;
             margin-bottom: 20px;
             text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        #main {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffcc00;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        #main:hover {
+            transform: scale(1.1);
+        }
+        #updates {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: #008680;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        #updates:hover {
+            transform: scale(1.1);
         }
         .leaderboard-container {
             display: flex;
@@ -48,6 +79,7 @@
         th, td {
             padding: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: left;
         }
         th {
             background: #ff4081;
@@ -62,7 +94,7 @@
     </style>
 </head>
 <body>
-    <h1>Classement JKMC</h1>
+    <h1>Classement JKMC 🏆</h1>
     <div class="leaderboard-container">
         <div class="leaderboard">
             <h2>Classement PVP</h2>
@@ -79,6 +111,9 @@
                 <tbody id="ranking-pvp"></tbody>
             </table>
         </div>
+
+        <button id="main">🏠 Accueil</button>
+        <button id="updates">🥏 Updates</button>
     
         <div class="leaderboard">
             <h2>Classement Poule Renard Vipère</h2>
@@ -151,11 +186,11 @@
                 });
                 
                 playersPVP.sort((a, b) => b.xp - a.xp || a.name.localeCompare(b.name));
-playersPRV.sort((a, b) => b.captures - a.captures || a.name.localeCompare(b.name));
-playersCacheCache.sort((a, b) => b.hiderCount - a.hiderCount || a.name.localeCompare(b.name)); 
-displayTable('pvp', playersPVP);
-displayTable('prv', playersPRV);
-displayTable('cachecache', playersCacheCache);
+                playersPRV.sort((a, b) => b.captures - a.captures || a.name.localeCompare(b.name));
+                                playersCacheCache.sort((a, b) => b.hiderCount - a.hiderCount || a.name.localeCompare(b.name)); 
+                displayTable('pvp', playersPVP);
+                displayTable('prv', playersPRV);
+                displayTable('cachecache', playersCacheCache);
 
             } catch (error) {
                 console.error('Erreur de récupération des stats:', error);
@@ -163,13 +198,32 @@ displayTable('cachecache', playersCacheCache);
         }
         
         function displayTable(type, data) {
-            const tableBody = document.getElementById(`ranking-${type}`);
-            tableBody.innerHTML = data.map(player => `
-                <tr>
-                    ${Object.values(player).map(value => `<td>${value}</td>`).join('')}
-                </tr>
-            `).join('');
-        }
+        const tableBody = document.getElementById(`ranking-${type}`);
+        tableBody.innerHTML = data.map((player, index) => 
+        `<tr>
+            <td style="display: flex; align-items: center;">
+                <img src="https://mc-heads.net/avatar/${player.name}/32.png" alt="skin" style="margin-right: 8px;">
+                #${index + 1} ${player.name}
+            </td>
+            ${Object.entries(player).slice(1).map(([key, value]) => `<td>${value}</td>`).join('')}
+        </tr>`
+    ).join('');
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("main").addEventListener("click", () => {
+        window.location.href = "index.html";
+        
+    });
+});
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("updates").addEventListener("click", () => {
+        window.location.href = "updates.html";
+        
+    });
+});
+
         
         function sortTable(type, key) {
             let dataset = type === 'pvp' ? playersPVP : type === 'prv' ? playersPRV : playersCacheCache;
